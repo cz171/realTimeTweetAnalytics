@@ -16,7 +16,7 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
 
-class TweetTopology
+class TopNTweetTopology
 {
   public static void main(String[] args) throws Exception
   {
@@ -34,10 +34,10 @@ class TweetTopology
 
     // now create the tweet spout with the credentials
     TweetSpout tweetSpout = new TweetSpout(
-        "[Your customer key]",
-        "[Your secret key]",
-        "[Your access token]",
-        "[Your access secret]"
+        "2IC6wQnc5kcQlhd3kILdSd4s6",
+        "VfOpokyIwX6QcvDYC83TeBGvNymQZA2RDw9QkxD4uB02QxzH8T",
+        "765379477446750208-cikTYlesUgRWTJ0OIE5QO7U9FIp1DWI",
+        "UNFUFmy2FA7QLhiruKO3iUcpCucfDmRggmLXNcARhwzsi"
     );
 
     // attach the tweet spout to the topology - parallelism of 1
@@ -50,10 +50,10 @@ class TweetTopology
     //builder.setBolt("count-bolt", new CountBolt(), 15).fieldsGrouping("parse-tweet-bolt", new Fields("tweet-word"));
 
     // attach rolling count bolt using fields grouping - parallelism of 5
-    builder.setBolt("rolling-count-bolt", new RollingCountBolt(30, 10), 1).fieldsGrouping("parse-tweet-bolt", new Fields("tweet-word"));
+    builder.setBolt("count-bolt", new CountBolt(), 15).fieldsGrouping("parse-tweet-bolt", new Fields("tweet-word"));
 
     // attach the report bolt using global grouping - parallelism of 1
-    builder.setBolt("report-bolt", new ReportBolt(), 1).globalGrouping("rolling-count-bolt");
+    builder.setBolt("report-bolt", new ReportBolt(), 1).globalGrouping("count-bolt");
 
     // create the default config object
     Config conf = new Config();

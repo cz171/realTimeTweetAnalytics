@@ -13,7 +13,6 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 import backtype.storm.utils.Utils;
-
 import java.util.Map;
 
 //********* ADDED 1-of-4 imported http://mvnrepository.com/artifact/com.lambdaworks/lettuce/
@@ -22,16 +21,16 @@ import com.lambdaworks.redis.RedisConnection;
 
 // COPY AND PASE: following code into pom.xml file (located lesson1/stage1/pom.xml)
 //<dependency>
-//  <groupId>com.lambdaworks</groupId>
-//  <artifactId>lettuce</artifactId>
-//  <version>2.3.3</version>
+ // <groupId>com.lambdaworks</groupId>
+ // <artifactId>lettuce</artifactId>
+ // <version>2.3.3</version>
 //</dependency>
 //
 //********* END 1-of-4
 
 //********* BEGIN stage2 exercise part 1-of-2 ***********
 //import the random sentence spout from spout/RandomSentenceSpout (remember the semicolon!)
-
+import udacity.storm.spout.RandomSentenceSpout;
 //********** END stage 2 exercise part 1-of-2 ***********
 
 /**
@@ -117,13 +116,15 @@ public class ReporterExclamationTopology {
 
     //********* BEGIN stage2 exercise part 2-of-2 ***********
     // attach the word spout to the topology - parallelism of 10
-    builder.setSpout("word", new TestWordSpout(), 10);
+    // builder.setSpout("word", new TestWordSpout(), 10);
+    builder.setSpout("random-sentence", new RandomSentenceSpout(), 10);
 
     // attach the exclamation bolt to the topology - parallelism of 3
-    builder.setBolt("exclaim1", new ExclamationBolt(), 3).shuffleGrouping("word");
+    // builder.setBolt("exclaim1", new ExclamationBolt(), 3).shuffleGrouping("word");
+    builder.setBolt("exclaim1", new ExclamationBolt(), 3).shuffleGrouping("random-sentence");
 
     // attach another exclamation bolt to the topology - parallelism of 2
-    builder.setBolt("exclaim2", new ExclamationBolt(), 2).shuffleGrouping("exclaim1");
+    builder.setBolt("exclaim2", new ExclamationBolt(), 2).shuffleGrouping("random-sentence");
 
     //********* END stage2 exercise part 2-of-2 ***********
 

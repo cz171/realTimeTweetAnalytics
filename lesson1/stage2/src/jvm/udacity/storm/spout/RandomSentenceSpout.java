@@ -26,8 +26,8 @@ public class RandomSentenceSpout extends BaseRichSpout {
   public void nextTuple() {
     Utils.sleep(100);
     String[] sentences = new String[]{
-      "the cow jumped over the moon",
-      "an apple a day keeps the doctor away",
+      "Download a Storm release , unpack it",
+      "I am curious if I sign up for a ND and get the 16% ",
       "four score and seven years ago",
       "snow white and the seven dwarfs",
       "i am at two with nature"
